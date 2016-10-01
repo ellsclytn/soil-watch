@@ -57,9 +57,7 @@ void setup() {
   setupWifi();
   client.setServer(SERVER, PORT);
   ThingSpeak.begin(espClient);
-}
 
-void loop() {
   if (!client.connected()) {
     reconnect();
   }
@@ -72,5 +70,9 @@ void loop() {
   Serial.print("Sent reading: ");
   Serial.println(readingBuffer);
 
-  delay(20000);
+  ESP.deepSleep(900 * 1000000); // Sleep every 15 minutes
 }
+
+void loop() {
+}
+
