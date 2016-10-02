@@ -70,7 +70,7 @@ void setup() {
   Serial.print("Sent reading: ");
   Serial.println(readingBuffer);
 
-  ESP.deepSleep(900 * 1000000); // Sleep every 15 minutes
+  ESP.deepSleep(1800 * 1000000); // Sleep every half hour
 }
 
 void loop() {
