@@ -1,16 +1,13 @@
 #include <ESP8266WiFi.h>
-#include <SPI.h>
 #include <Wire.h>
-#include <Adafruit_ADS1015.h>
 #include <PubSubClient.h>
 #include "ThingSpeak.h"
 #include "env.h"
 
-Adafruit_ADS1115 ads;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-char readingBuffer[7];
+char readingBuffer[5];
 
 void setupWifi() {
   WiFi.disconnect(true);
@@ -53,7 +50,6 @@ void reconnect() {
 void setup() {
   Serial.begin(9600);
 
-  ads.begin();
   setupWifi();
   client.setServer(SERVER, PORT);
   ThingSpeak.begin(espClient);
@@ -62,11 +58,11 @@ void setup() {
     reconnect();
   }
 
-  int16_t reading = ads.readADC_SingleEnded(0);
+  int reading = analogRead(A0);
   String readingString = String(reading);
   readingString.toCharArray(readingBuffer, readingString.length() + 1);
   client.publish("soilMoisture", readingBuffer);
-  ThingSpeak.writeField(TS_CHANNEL_ID, 1, readingBuffer, TS_API_KEY);
+  ThingSpeak.writeField(TS_CHANNEL_ID, 2, readingBuffer, TS_API_KEY);
   Serial.print("Sent reading: ");
   Serial.println(readingBuffer);
 
