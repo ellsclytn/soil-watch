@@ -58,6 +58,8 @@ void setup() {
     reconnect();
   }
 
+  pinMode(15, OUTPUT);
+  digitalWrite(15, HIGH);
   int reading = analogRead(A0);
   String readingString = String(reading);
   readingString.toCharArray(readingBuffer, readingString.length() + 1);
