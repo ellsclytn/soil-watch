@@ -60,7 +60,7 @@ void setup() {
 
   pinMode(D7, OUTPUT);
   digitalWrite(D7, LOW);
-  int reading = analogRead(A0);
+  int reading = 1024 - analogRead(A0);
   String readingString = String(reading);
   readingString.toCharArray(readingBuffer, readingString.length() + 1);
   client.publish("soilMoisture", readingBuffer);
