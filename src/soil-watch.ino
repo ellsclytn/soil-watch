@@ -1,10 +1,8 @@
 #include <ESP8266WiFi.h>
-#include <Wire.h>
 #include <PubSubClient.h>
-#include "ThingSpeak.h"
 #include "env.h"
 
-WiFiClient espClient;
+WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
 char readingBuffer[5];
@@ -34,9 +32,8 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection... ");
 
-    if (client.connect(WiFi.macAddress().c_str(), USER, MQ_PASS)) {
+    if (client.connect(WiFi.macAddress().c_str(), MQTT_USER, MQTT_PASS)) {
       Serial.println("connected.");
-      client.subscribe("pr");
     } else {
       Serial.print("failed, rc: ");
       Serial.print(client.state());
@@ -51,8 +48,7 @@ void setup() {
   Serial.begin(9600);
 
   setupWifi();
-  client.setServer(SERVER, PORT);
-  ThingSpeak.begin(espClient);
+  client.setServer(MQTT_SERVER, MQTT_PORT);
 
   if (!client.connected()) {
     reconnect();
@@ -63,8 +59,7 @@ void setup() {
   int reading = 1024 - analogRead(A0);
   String readingString = String(reading);
   readingString.toCharArray(readingBuffer, readingString.length() + 1);
-  client.publish("soilMoisture", readingBuffer);
-  ThingSpeak.writeField(TS_CHANNEL_ID, 2, readingBuffer, TS_API_KEY);
+  client.publish("soil", readingBuffer);
   Serial.print("Sent reading: ");
   Serial.println(readingBuffer);
 
@@ -73,4 +68,3 @@ void setup() {
 
 void loop() {
 }
-
